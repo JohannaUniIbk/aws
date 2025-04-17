@@ -51,19 +51,18 @@ async function loadStations(url) {
             });
         },
         onEachFeature: function (feature, layer) {
-             //console.log(feature.properties);
-             console.log(feature.geometry);
+            //console.log(feature.properties);
+            console.log(feature.geometry);
             let props = feature.properties;
             layer.bindPopup(`
                 <h4>${feature.properties.name} (${feature.geometry.coordinates[2]}m)</h4>
-                
-                `);
+            `);
         }
     }).addTo(overlays.stations);
 }
 
-       
-        
+
+
 
 
 //GEOJSON laden
