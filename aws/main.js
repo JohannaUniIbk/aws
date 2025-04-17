@@ -39,6 +39,7 @@ async function loadStations(url) {
     let jsondata = await response.json();
 
     // Wetterstationen mit Icons und Popups
+    //console.log(jsondata);
     L.geoJSON(jsondata, {
         pointToLayer: function (feature, latlng) {
             return L.marker(latlng, {
@@ -50,9 +51,13 @@ async function loadStations(url) {
             });
         },
         onEachFeature: function (feature, layer) {
-            console.log(feature.properties); 
+             //console.log(feature.properties);
+             console.log(feature.geometry);
             let props = feature.properties;
-            layer.bindPopup(`<h4>${feature.properties.name}</h4>`);
+            layer.bindPopup(`
+                <h4>${feature.properties.name} (${feature.geometry.coordinates[2]}m)</h4>
+                
+                `);
         }
     }).addTo(overlays.stations);
 }
