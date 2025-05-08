@@ -12,9 +12,9 @@ let map = L.map("map").setView([ibk.lat, ibk.lng], ibk.zoom);
 
 // thematische Layer
 let overlays = {
-    stations: L.featureGroup(),
+    stations: L.featureGroup().addTo(map),
     temperature: L.featureGroup(),
-    wind: L.featureGroup().addTo(map),
+    wind: L.featureGroup(),
 }
 
 
@@ -128,7 +128,7 @@ function showWind(jsondata) {
                 let color = getColor(feature.properties.WG, COLORS.wind);
                 return L.marker(latlng,{
                     icon: L.divIcon({
-                        className: "aws-div-icon",
+                        className: "aws-div-icon-wind",
                         html: `<span style="background-color:${color}">${feature.properties.WG.toFixed(1)}</span>`,
                     }),
                 })
