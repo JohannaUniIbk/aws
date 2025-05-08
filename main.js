@@ -74,6 +74,7 @@ async function loadStations(url) {
         }
     }).addTo(overlays.stations);
     showTemperature(jsondata);
+    showWind(jsondata);
 }
 
 
@@ -83,6 +84,7 @@ async function loadStations(url) {
 //GEOJSON laden
 loadStations("https://static.avalanche.report/weather_stations/stations.geojson");
 
+//Temperatur
 function showTemperature(jsondata) {
     L.geoJSON(jsondata, {
         filter: function(feature){
@@ -110,5 +112,37 @@ function getColor(value, ramp) {
             return rule.color;
     }
 }
-let testColor =getColor(-5, COLORS.temperature);
-console.log("TestColor fuer temp -5", testColor);
+//let testColor =getColor(-5, COLORS.temperature);
+//console.log("TestColor fuer temp -5", testColor);
+
+
+//Wind
+function showWind(jsondata) {
+    L.geoJSON(jsondata, {
+        filter: function(feature){
+            if(feature.properties.WG > 0 && feature.properties.WG < 1000) {
+                return true;
+            }
+        },
+            pointToLayer: function(feature,latlng){
+                let color = getColor(feature.properties.WG, COLORS.wind);
+                return L.marker(latlng,{
+                    icon: L.divIcon({
+                        className: "aws-div-icon",
+                        html: `<span style="background-color:${color}">${feature.properties.WG.toFixed(1)}</span>`,
+                    }),
+                })
+            },
+    }).addTo(overlays.wind);
+}
+
+console.log(COLORS);
+function getColor(value, ramp) {
+    for(let rule of ramp) {
+        console.log("rule", rule);
+        if (value>= rule.min && value < rule.max)
+            return rule.color;
+    }
+}
+//let testColor =getColor(-5, COLORS.wind);
+//console.log("TestColor fuer wind 10", testColor);
