@@ -12,8 +12,8 @@ let map = L.map("map").setView([ibk.lat, ibk.lng], ibk.zoom);
 
 // thematische Layer
 let overlays = {
-    stations: L.featureGroup().addTo(map),
-    temperature: L.featureGroup(),
+    stations: L.featureGroup(),
+    temperature: L.featureGroup().addTo(map),
 }
 
 
@@ -83,6 +83,11 @@ loadStations("https://static.avalanche.report/weather_stations/stations.geojson"
 
 function showTemperature(jsondata) {
     L.geoJSON(jsondata, {
+        filter: function(feature){
+            if(feature.properties.LT > -50 && feature.properties.LT < 50) {
+                return true;
+            }
+        },
             pointToLayer: function(feature,latlng){
                 return L.marker(latlng,{
                     icon: L.divIcon({
