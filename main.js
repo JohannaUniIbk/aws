@@ -35,7 +35,6 @@ L.control.layers({
     "Wind": overlays.wind,
     "Schneehöhe": overlays.snow,
     "Windrichtung": overlays.direction,
-
 }).addTo(map);
 
 // Maßstab
@@ -90,6 +89,7 @@ async function loadStations(url) {
 
 //GEOJSON laden
 loadStations("https://static.avalanche.report/weather_stations/stations.geojson");
+
 
 //Temperatur
 function showTemperature(jsondata) {
@@ -188,7 +188,7 @@ function getColor(value, ramp) {
 function showDirection(jsondata) {
     L.geoJSON(jsondata, {
         filter: function(feature){
-            if(feature.properties.WD > 0 && feature.properties.WD < 1000) {
+            if(feature.properties.WR > 0 && feature.properties.WR < 360) {
                 return true;
             }
         },
@@ -197,7 +197,7 @@ function showDirection(jsondata) {
                 return L.marker(latlng,{
                     icon: L.divIcon({
                         className: "aws-div-icon-wind",
-                        html: `<span style="background-color:${color}">${feature.properties.WD.toFixed(1)}</span>`,
+                        html: `<span style="background-color:${color}">${feature.properties.WR.toFixed(1)}</span>`,
                     }),
                 })
             },
