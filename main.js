@@ -184,6 +184,18 @@ function getColor(value, ramp) {
             return rule.color;
     }
 }
+// Umwandlung von Grad in Himmelsrichtungen
+function getWindDirectionLabel(degrees) {
+    if (degrees >= 337.5 || degrees < 22.5) return "N";
+    if (degrees >= 22.5 && degrees < 67.5) return "NE";
+    if (degrees >= 67.5 && degrees < 112.5) return "E";
+    if (degrees >= 112.5 && degrees < 157.5) return "SE";
+    if (degrees >= 157.5 && degrees < 202.5) return "S";
+    if (degrees >= 202.5 && degrees < 247.5) return "SW";
+    if (degrees >= 247.5 && degrees < 292.5) return "W";
+    if (degrees >= 292.5 && degrees < 337.5) return "NW";
+    return "-"; 
+}
 
 //Windrichtung
 function showDirection(jsondata) {
@@ -195,10 +207,13 @@ function showDirection(jsondata) {
         },
             pointToLayer: function(feature,latlng){
                 let color = getColor(feature.properties.WG, COLORS.wind);
+                let windDirectionDegrees = feature.properties.WR;
+                let windDirectionLabel = getWindDirectionLabel(windDirectionDegrees);
+
                 return L.marker(latlng,{
                     icon: L.divIcon({
                         className: "aws-div-icon-wind",
-                        html: `<span style="background-color:${color}">${feature.properties.WR.toFixed(1)}</span>`,
+                        html: `<span style="background-color:${color}">${windDirectionLabel}</span>`,
                     }),
                 })
             },
