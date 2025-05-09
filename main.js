@@ -234,11 +234,11 @@ function getColor(value, ramp) {
     L.control.rainviewer({ 
         position: 'bottomleft',
         nextButtonText: '>',
-        playStopButtonText: 'Play/Stop',
+        playStopButtonText: '▶/⏸',
         prevButtonText: '<',
-        positionSliderLabelText: "Hour:",
-        opacitySliderLabelText: "Opacity:",
-        animationInterval: 500,
+        positionSliderLabelText: "Zeit:",
+        opacitySliderLabelText: "Deckkraft:",
+        animationInterval: 300,
         opacity: 0.5
     }).addTo(map);
 
