@@ -15,7 +15,8 @@ let overlays = {
     stations: L.featureGroup(),
     temperature: L.featureGroup(),
     wind: L.featureGroup(),
-    snow: L.featureGroup().addTo(map),
+    snow: L.featureGroup(),
+    direction: L.featureGroup().addTo(map),
 }
 
 
@@ -32,7 +33,9 @@ L.control.layers({
     "Wetterstationen": overlays.stations,
     "Temperatur": overlays.temperature,
     "Wind": overlays.wind,
-    "Schnee": overlays.snow,
+    "Schneehöhe": overlays.snow,
+    "Windrichtung": overlays.direction,
+
 }).addTo(map);
 
 // Maßstab
@@ -78,6 +81,7 @@ async function loadStations(url) {
     showTemperature(jsondata);
     showWind(jsondata);
     showSnow(jsondata);
+    showDirection(jsondata);
 }
 
 
@@ -169,6 +173,35 @@ function showSnow(jsondata) {
                 })
             },
     }).addTo(overlays.snow);
+}
+
+console.log(COLORS);
+function getColor(value, ramp) {
+    for(let rule of ramp) {
+        console.log("rule", rule);
+        if (value>= rule.min && value < rule.max)
+            return rule.color;
+    }
+}
+
+//Windrichtung
+function showDirection(jsondata) {
+    L.geoJSON(jsondata, {
+        filter: function(feature){
+            if(feature.properties.WD > 0 && feature.properties.WD < 1000) {
+                return true;
+            }
+        },
+            pointToLayer: function(feature,latlng){
+                let color = getColor(feature.properties.WG, COLORS.wind);
+                return L.marker(latlng,{
+                    icon: L.divIcon({
+                        className: "aws-div-icon-wind",
+                        html: `<span style="background-color:${color}">${feature.properties.WD.toFixed(1)}</span>`,
+                    }),
+                })
+            },
+    }).addTo(overlays.direction);
 }
 
 console.log(COLORS);
