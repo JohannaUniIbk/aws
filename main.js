@@ -47,6 +47,7 @@ async function loadStations(url) {
     let response = await fetch(url);
     let jsondata = await response.json();
 
+
     // Wetterstationen mit Icons und Popups
     //console.log(jsondata);
     L.geoJSON(jsondata, {
@@ -212,3 +213,4 @@ function getColor(value, ramp) {
             return rule.color;
     }
 }
+
