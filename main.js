@@ -12,9 +12,10 @@ let map = L.map("map").setView([ibk.lat, ibk.lng], ibk.zoom);
 
 // thematische Layer
 let overlays = {
-    stations: L.featureGroup().addTo(map),
+    stations: L.featureGroup(),
     temperature: L.featureGroup(),
     wind: L.featureGroup(),
+    snow: L.featureGroup().addTo(map),
 }
 
 
@@ -31,6 +32,7 @@ L.control.layers({
     "Wetterstationen": overlays.stations,
     "Temperatur": overlays.temperature,
     "Wind": overlays.wind,
+    "Schnee": overlays.snow,
 }).addTo(map);
 
 // Maßstab
@@ -75,6 +77,7 @@ async function loadStations(url) {
     }).addTo(overlays.stations);
     showTemperature(jsondata);
     showWind(jsondata);
+    showSnow(jsondata);
 }
 
 
@@ -146,3 +149,33 @@ function getColor(value, ramp) {
 }
 //let testColor =getColor(-5, COLORS.wind);
 //console.log("TestColor fuer wind 10", testColor);
+
+
+//Schnee
+function showSnow(jsondata) {
+    L.geoJSON(jsondata, {
+        filter: function(feature){
+            if(feature.properties.HS > -1 && feature.properties.HS < 50000) {
+                return true;
+            }
+        },
+            pointToLayer: function(feature,latlng){
+                let color = getColor(feature.properties.HS, COLORS.snow);
+                return L.marker(latlng,{
+                    icon: L.divIcon({
+                        className: "aws-div-icon-snow",
+                        html: `<span style="background-color:${color}">${feature.properties.HS.toFixed(1)}</span>`,
+                    }),
+                })
+            },
+    }).addTo(overlays.snow);
+}
+
+console.log(COLORS);
+function getColor(value, ramp) {
+    for(let rule of ramp) {
+        console.log("rule", rule);
+        if (value>= rule.min && value < rule.max)
+            return rule.color;
+    }
+}
