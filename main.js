@@ -201,7 +201,7 @@ function getWindDirectionLabel(degrees) {
 function showDirection(jsondata) {
     L.geoJSON(jsondata, {
         filter: function(feature){
-            if(feature.properties.WR > 0 && feature.properties.WR < 360) {
+            if(feature.properties.WR > 0 && feature.properties.WR < 361) {
                 return true;
             }
         },
